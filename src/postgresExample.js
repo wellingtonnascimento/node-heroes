@@ -1,16 +1,6 @@
 // npm install sequelize pg-hstore pg
 
-const Sequelize = require('sequelize');
-const driver = new Sequelize(
-    'heroes',
-    'wellington',
-    '123456', {
-        host: 'localhost',
-        dialect: 'postgres',
-        quoteIndentifiers: false,
-        operatorsAliases: false
-    }
-);
+
 
 async function main(){
     const Herois = driver.define('herois',{
@@ -38,7 +28,10 @@ async function main(){
     //     nome: 'Lanterna Verde',
     //     poder: 'Anel'
     // })
-    const result = await Herois.findAll({raw: true});
+    const result = await Herois.findAll({
+        raw: true,
+        attributes: ['nome']
+    });
     console.log('result', result);
 }
 main();
