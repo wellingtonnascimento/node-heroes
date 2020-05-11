@@ -19,7 +19,7 @@ class Postgres extends ICrud{
         }
         
     }
-    defineModel(){
+    async defineModel(){
         this._herois = driver.define('herois',{
             id: {
                 type: Sequelize.INTEGER,
@@ -40,6 +40,7 @@ class Postgres extends ICrud{
             freezeTableName: false,
             timestamps: false
         })
+        await Herois.sync();
     }
     create(item){
         console.log('o item foi salvo em mongodb');
