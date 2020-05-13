@@ -34,7 +34,7 @@
 
 docker exec -it mongodb \
       mongo --host localhost -u admin -p 123456 --authenticationDatabase admin \
-      --eval "db.getSiblingDB('herois').createUser({user: 'wellnigton', pwd: '123456', roles: [{role: 'readWrite', db: 'herois'}]})"
+      --eval "db.getSiblingDB('herois').createUser({user: 'wellington', pwd: '123456', roles: [{role: 'readWrite', db: 'herois'}]})"
 
 
     //listar containers ativos 
