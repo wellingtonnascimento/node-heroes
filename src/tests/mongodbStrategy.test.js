@@ -4,12 +4,16 @@ const Context = require('../db/strategies/base/contextStrategy');
 
 const MOCK_HEROI_CADASTRAR = {nome: 'Mulher Maravilha', poder:'Leço'};
 const MOCK_HEROI_DEFAULT = {nome: `Homem Aranha-${Date.now()}`, poder:'Teia'};
+const MOCK_HEROI_ATUALZAR= {nome: `Zaca urubu-${Date.now()}`, poder:'Malandro'};
+let MOCK_HEROI_ID = '';
 const context = new Context(new Mongodb());
-
 describe('MongoDB Suite de teste', function() {
     this.beforeAll(async () => {
         await context.connect();
         await context.create(MOCK_HEROI_DEFAULT);
+       const result = await context.create(MOCK_HEROI_ATUALZAR);
+        MOCK_HEROI_ID = result._id;
+       
     })
 
     it('Verificar conexão', async () => {
@@ -29,6 +33,12 @@ describe('MongoDB Suite de teste', function() {
         const result = {nome, poder};
 
         assert.deepEqual(result, MOCK_HEROI_DEFAULT);
-
     })
+    it('atualizar', async () => {
+        const result = await context.update(MOCK_HEROI_ID, {
+            nome: 'Pica Pau'
+        })
+        assert.deepEqual(result.nModified, 1)
+    })
+
 })
