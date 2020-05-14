@@ -1,19 +1,25 @@
 const assert = require('assert');
-const Mongodb = require('../db/strategies/mongodb');
+const MongoDb = require('../db/strategies/mongodb/mongodb');
+const HeroiSchema = require('../db/strategies/mongodb/schemas/heroisSchema')
 const Context = require('../db/strategies/base/contextStrategy');
 
-const MOCK_HEROI_CADASTRAR = {nome: 'Mulher Maravilha', poder:'Leço'};
-const MOCK_HEROI_DEFAULT = {nome: `Homem Aranha-${Date.now()}`, poder:'Teia'};
-const MOCK_HEROI_ATUALZAR= {nome: `Zaca urubu-${Date.now()}`, poder:'Malandro'};
+
+const MOCK_HEROI_CADASTRAR = { nome: 'Mulher Maravilha', poder: 'Leço' };
+const MOCK_HEROI_DEFAULT = { nome: `Homem Aranha-${Date.now()}`, poder: 'Teia' };
+const MOCK_HEROI_ATUALZAR = { nome: `Zaca urubu-${Date.now()}`, poder: 'Malandro' };
 let MOCK_HEROI_ID = '';
-const context = new Context(new Mongodb());
-describe('MongoDB Suite de teste', function() {
+
+let context = {};
+
+describe('MongoDB Suite de teste', function () {
     this.beforeAll(async () => {
-        await context.connect();
+        const connection = MongoDb.connect();
+        context = new Context(new MongoDb(connection, HeroiSchema))
+
         await context.create(MOCK_HEROI_DEFAULT);
-       const result = await context.create(MOCK_HEROI_ATUALZAR);
+        const result = await context.create(MOCK_HEROI_ATUALZAR);
         MOCK_HEROI_ID = result._id;
-       
+
     })
 
     it('Verificar conexão', async () => {
@@ -24,13 +30,13 @@ describe('MongoDB Suite de teste', function() {
         assert.deepEqual(result, expected)
     })
     it('cadastrar', async () => {
-        const {nome, poder} = await context.create(MOCK_HEROI_CADASTRAR);
-        assert.deepEqual({nome, poder}, MOCK_HEROI_CADASTRAR)
+        const { nome, poder } = await context.create(MOCK_HEROI_CADASTRAR);
+        assert.deepEqual({ nome, poder }, MOCK_HEROI_CADASTRAR)
     })
-    it('listar', async () =>{
-        
-        const [{nome,poder}] = await context.read({nome: MOCK_HEROI_DEFAULT.nome});
-        const result = {nome, poder};
+    it('listar', async () => {
+
+        const [{ nome, poder }] = await context.read({ nome: MOCK_HEROI_DEFAULT.nome });
+        const result = { nome, poder };
 
         assert.deepEqual(result, MOCK_HEROI_DEFAULT);
     })
