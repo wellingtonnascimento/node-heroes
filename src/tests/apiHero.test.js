@@ -27,7 +27,7 @@ describe.only('Suite de teste da API Heroes', function (){
         assert.deepEqual(statusCode, 200);
         assert.ok(dados.length === TAMANHO_LIMIT);
     })
-    it('listar /herois = deve dar erro caso passe string', async () => {
+    it('listar /herois = deve retornar um erro com limit incorreto por usar string', async () => {
         const TAMANHO_LIMIT ='AEE';
         const result = await app.inject({
             method: 'GET',
