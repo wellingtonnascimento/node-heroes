@@ -15,7 +15,7 @@ describe.only('Suite de teste da API Heroes', function (){
         assert.deepEqual(statusCode, 200);
         assert.ok(Array.isArray(dados));
     })
-    it('listar /herois = deve retornar somente 10 resgistos', async () => {
+    it('listar /herois = deve retornar somente 3 resgistos', async () => {
         const TAMANHO_LIMIT =3;
         const result = await app.inject({
             method: 'GET',
