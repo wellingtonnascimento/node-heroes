@@ -1,14 +1,13 @@
 // npm i hapi
-
 const Hapi = require('hapi');
 const Context = require('./db/strategies/base/contextStrategy');
-const MongoDb = require('./db/strategies/mongodb/mongodb');
+const MongoDb = require('./db/strategies/mongodb/mongoDbStrategy');
 const HeroiSchema = require('./db/strategies/mongodb/schemas/heroisSchema');
 const HeroRoute = require('./routes/heroesRoute');
 
 
 const app = new Hapi.server({
-    port: 5000
+    port: 4000
 });
 
 function mapRoutes(instance, methods){
