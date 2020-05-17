@@ -1,7 +1,6 @@
-const assert = require('assert');
-const api = require('./../api');
+const assert = require('assert')
+const api = require('./../api')
 let app = {}
-
 let MOCK_ID = ""
 
 function cadastrar() {
@@ -22,6 +21,7 @@ describe('API Heroes test suite', function ()  {
         
         MOCK_ID = JSON.parse(result.payload)._id
     })
+
     it('listar /heroes', async () => {
         const result = await app.inject({
             method: 'GET',
@@ -34,16 +34,7 @@ describe('API Heroes test suite', function ()  {
     })
 
     it('cadastrar /herois', async () => {
-        const result = await app.inject({
-            method: 'POST',
-            url: '/herois',
-            payload: {
-                nome: 'Flash',
-                poder: 'Velocidade'
-            }
-        })
-
-        
+        const result = await cadastrar()
         assert.deepEqual(result.statusCode, 200)
         assert.deepEqual(JSON.parse(result.payload).nome, "Flash")
 
@@ -60,7 +51,26 @@ describe('API Heroes test suite', function ()  {
         const payload = JSON.parse(result.payload)
         assert.deepEqual(result.statusCode, 400)
         assert.ok(payload.message.search('"nome" is required') !== -1)
+    })
+    it('atualizar /herois/{id}', async () => {
+        const result = await app.inject({
+            method: 'PATCH',
+            url: `/herois/${MOCK_ID}`,
+            payload: {
+                nome: 'Canário Negro',
+                poder: 'Grito'
+            }
+        })
+        assert.deepEqual(result.statusCode, 200) 
+        assert.deepEqual(JSON.parse(result.payload).nModified, 1)
 
     })
-
+    it('remover /herois/{id}', async () => {
+        const result =  await app.inject({
+            method: 'DELETE',
+            url: `/herois/${MOCK_ID}` 
+        })
+        assert.deepEqual(result.statusCode, 200) 
+        assert.deepEqual(JSON.parse(result.payload).n, 1)
+    })
 })
