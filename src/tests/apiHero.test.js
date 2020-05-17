@@ -2,9 +2,25 @@ const assert = require('assert');
 const api = require('./../api');
 let app = {}
 
+let MOCK_ID = ""
+
+function cadastrar() {
+    return app.inject({
+        method: 'POST',
+        url: '/herois',
+        payload: {
+            nome: 'Flash',
+            poder: 'Velocidade'
+        }
+    });
+}
+
 describe('API Heroes test suite', function ()  {
     this.beforeAll(async () => {
         app = await api
+        const result = await cadastrar()
+        
+        MOCK_ID = JSON.parse(result.payload)._id
     })
     it('listar /heroes', async () => {
         const result = await app.inject({
@@ -26,6 +42,8 @@ describe('API Heroes test suite', function ()  {
                 poder: 'Velocidade'
             }
         })
+
+        
         assert.deepEqual(result.statusCode, 200)
         assert.deepEqual(JSON.parse(result.payload).nome, "Flash")
 

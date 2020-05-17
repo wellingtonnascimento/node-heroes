@@ -38,6 +38,32 @@ class HeroRoutes extends BaseRoute {
             }
         }
     }
+    update() {
+        return {
+            path: '/herois/{id}',
+            method: 'PATCH',
+            config: {
+                validate: {
+                    failAction: (request, h, err) => {
+                        throw err;
+                      },
+                    payload: {
+                        nome: Joi.string().max(100),
+                        poder: Joi.string().max(30)
+                    },
+                    params: {
+                        id: Joi.string().required()
+                    }
+                },
+
+            },
+            handler: (request, headers) => {
+                const payload = request.payload;
+                const id = request.params.id;
+                return this.db.update(id, payload)
+            }
+        }
+    }
 
 }
 
