@@ -10,6 +10,11 @@ class HeroRoutes extends BaseRoute {
         return {
             path: '/herois',
             method: 'GET',
+            config: {
+                tags: ['api'],
+                description: 'listar herois',
+                notes: 'retorna a base inteira de herois'
+            },
             handler: (request, headers) => {
                 return this.db.read()
             }
@@ -20,7 +25,9 @@ class HeroRoutes extends BaseRoute {
             path: '/herois',
             method: 'POST',
             config: {
-
+                tags: ['api'],
+                description: 'cadastrar herois',
+                notes: 'Cadastra um heroi por nome e poder',
                 validate: {
                     failAction: (request, h, err) => {
                         throw err;
@@ -43,6 +50,9 @@ class HeroRoutes extends BaseRoute {
             path: '/herois/{id}',
             method: 'PATCH',
             config: {
+                tags: ['api'],
+                description: 'atualizar herois',
+                notes: 'atualiza um heroi por ID',
                 validate: {
                     failAction: (request, h, err) => {
                         throw err;
@@ -69,6 +79,9 @@ class HeroRoutes extends BaseRoute {
             path: '/herois/{id}',
             method: 'DELETE',
             config: {
+                tags: ['api'],
+                description: 'remover herois',
+                notes: 'remove um heroi por id',
                 validate: {
                     failAction: (request, h, err) => {
                         throw err;
