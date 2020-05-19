@@ -1,6 +1,7 @@
 const BaseRoute = require('./base/baseRoute')
 const Joi = require('joi')
 const Boom = require('boom')
+const PasswordHelper = require('../helpers/passwordHelper');
 
 const USER = {
     username: 'xuxadasilva',
@@ -9,9 +10,10 @@ const USER = {
 const Jwt = require('jsonwebtoken')
 
 class AuthRoutes extends BaseRoute {
-    constructor(key) {
+    constructor(key, db) {
         super()
         this.secret = key
+        this.db = db
     }
 
     login() {
@@ -30,20 +32,34 @@ class AuthRoutes extends BaseRoute {
                     }
                 }
             },
-            handler: (request, headers) => {
+            handler: async (request, headers) => {
                 const {
                     username,
                     password
                 } = request.payload
-                if (
-                    username.toLowerCase() !== USER.username ||
-                    password !== USER.password
-                )
-                    return Boom.unauthorized()
+
+                const [usuario] = await this.db.read({
+                    username: username.toLowerCase()
+                })
+                if(!usuario){
+                    return Boom.unauthorized('Usuario Informado não existe ')
+                }
+
+                 const match = await PasswordHelper.comparePassword(password, usuario.password)
+
+                 if(!match){
+                     return Boom.unauthorized('O usuario ou senha invalida')
+                 }
+                // if (
+                //     username.toLowerCase() !== USER.username ||
+                //     password !== USER.password
+                // )
+                //     return Boom.unauthorized()
                     
                 return {
                     token: Jwt.sign({
-                        username: username
+                        username: username,
+                        id: usuario.id,
                     }, this.secret)
                 }
             }

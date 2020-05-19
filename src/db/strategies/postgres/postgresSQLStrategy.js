@@ -63,8 +63,9 @@ static async connect() {
     });
   }
 
-  update(id, item) {
-    return this._db.update(item, {
+  update(id, item, upsert = false) {
+    const fn = upsert ? 'upsert' : 'update'
+    return this._db[fn](item, {
       where: {
         id
       }

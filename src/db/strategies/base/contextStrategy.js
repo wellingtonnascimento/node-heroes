@@ -16,8 +16,8 @@ class ContextStrategy extends IDb {
   read(item) {
     return this._database.read(item);
   }
-  update(id, item) {
-    return this._database.update(id, item);
+  update(id, item, upsert) {
+    return this._database.update(id, item, upsert);
   }
   delete(id) {
     return this._database.delete(id);
