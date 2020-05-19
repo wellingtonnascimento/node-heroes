@@ -15,7 +15,7 @@ const Vision = require('vision');
 const Inert = require('inert');
 
 const HapiJwt = require('hapi-auth-jwt2');
-const JWT_SECRET ='SEGREDO__1356';
+const JWT_SECRET = 'SEGREDO__1356';
 
 const swaggerConfig = {
     info: {
@@ -30,16 +30,16 @@ const app = new Hapi.server({
     port: 4000
 });
 
-function mapRoutes(instance, methods){
+function mapRoutes(instance, methods) {
 
-    return methods.map(method=> instance[method]());
+    return methods.map(method => instance[method]());
 
 }
 
 async function main() {
     const connection = MongoDb.connect();
     const context = new Context(new MongoDb(connection, HeroiSchema));
-    
+
     const connectionPostgres = await Postgres.connect();
     const model = await Postgres.defineModel(connectionPostgres, UserSchame);
     const contextPostgres = new Context(new Postgres(connectionPostgres, model));
@@ -61,7 +61,15 @@ async function main() {
         // options: {
         //     expiresIn: 20
         // },
-        validate: (dado, request) => {
+        validate: async(dado, request) => {
+            const [result] = await contextPostgres.read({
+                username: dado.username.toLowerCase()
+            })
+            if (!result) {
+                return {
+                    isValid: false
+                }
+            }
             return {
                 isValid: true
             }
