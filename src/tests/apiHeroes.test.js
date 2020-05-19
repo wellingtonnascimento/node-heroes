@@ -2,11 +2,16 @@ const assert = require('assert')
 const api = require('./../api')
 let app = {}
 let MOCK_ID = ""
+let MOCK_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inh1eGFkYXNpbHZhIiwiaWF0IjoxNTg5ODk3ODIwfQ.LlyUYQf5Ibwi1Dv_3a7RSewMdVfZjzbAReSK1MVbRwQ"
+const headers = {
+    Authorization: MOCK_TOKEN
+}
 
 function cadastrar() {
     return app.inject({
         method: 'POST',
         url: '/herois',
+        headers,
         payload: {
             nome: 'Flash',
             poder: 'Velocidade'
@@ -21,11 +26,21 @@ describe('API Heroes test suite', function ()  {
         
         MOCK_ID = JSON.parse(result.payload)._id
     })
+    it('não deve listar herois sem um token', async () => {
+        const result = await app.inject({
+            method: 'GET',
+            url: '/herois', 
+        })
+        const statusCode = result.statusCode
 
+        assert.deepEqual(statusCode, 401)
+        assert.deepEqual(JSON.parse(result.payload).error, "Unauthorized")
+    })
     it('listar /heroes', async () => {
         const result = await app.inject({
             method: 'GET',
-            url: '/herois'
+            url: '/herois',
+            headers
         })
         const statusCode = result.statusCode 
         
@@ -44,6 +59,7 @@ describe('API Heroes test suite', function ()  {
         const result = await app.inject({
             method: 'POST',
             url: '/herois',
+            headers,
             payload: {
                 NAME: 'Flash'
             }
@@ -56,6 +72,7 @@ describe('API Heroes test suite', function ()  {
         const result = await app.inject({
             method: 'PATCH',
             url: `/herois/${MOCK_ID}`,
+            headers,
             payload: {
                 nome: 'Canário Negro',
                 poder: 'Grito'
@@ -68,7 +85,8 @@ describe('API Heroes test suite', function ()  {
     it('remover /herois/{id}', async () => {
         const result =  await app.inject({
             method: 'DELETE',
-            url: `/herois/${MOCK_ID}` 
+            url: `/herois/${MOCK_ID}` ,
+            headers
         })
         assert.deepEqual(result.statusCode, 200) 
         assert.deepEqual(JSON.parse(result.payload).n, 1)

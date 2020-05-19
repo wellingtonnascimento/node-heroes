@@ -5,10 +5,14 @@ const Context = require('./db/strategies/base/contextStrategy');
 const MongoDb = require('./db/strategies/mongodb/mongoDbStrategy');
 const HeroiSchema = require('./db/strategies/mongodb/schemas/heroisSchema');
 const HeroRoute = require('./routes/heroesRoute');
+const AuthRoute = require('./routes/authRoutes');
 
 const HapiSwagger = require('hapi-swagger');
 const Vision = require('vision');
 const Inert = require('inert');
+
+const HapiJwt = require('hapi-auth-jwt2');
+const JWT_SECRET ='SEGREDO__1356';
 
 const swaggerConfig = {
     info: {
@@ -34,6 +38,7 @@ async function main() {
     const context = new Context(new MongoDb(connection, HeroiSchema));
 
     await app.register([
+        HapiJwt,
         Vision,
         Inert,
         {
@@ -42,8 +47,22 @@ async function main() {
 
         }
     ]);
+
+    app.auth.strategy('jwt', 'jwt', {
+        key: JWT_SECRET,
+        // options: {
+        //     expiresIn: 20
+        // },
+        validate: (dado, request) => {
+            return {
+                isValid: true
+            }
+        }
+    });
+    app.auth.default('jwt')
     app.route([
-        ...mapRoutes(new HeroRoute(context), HeroRoute.methods())
+        ...mapRoutes(new HeroRoute(context), HeroRoute.methods()),
+        ...mapRoutes(new AuthRoute(JWT_SECRET), AuthRoute.methods())
     ])
 
     await app.start();

@@ -1,5 +1,9 @@
 const BaseRoute = require ('./base/baseRoute');
 const Joi = require('joi');
+
+const headers = Joi.object({
+    authorization: Joi.string().required()
+}).unknown()
 class HeroRoutes extends BaseRoute {
     constructor(db) {
         super()
@@ -13,7 +17,10 @@ class HeroRoutes extends BaseRoute {
             config: {
                 tags: ['api'],
                 description: 'listar herois',
-                notes: 'retorna a base inteira de herois'
+                notes: 'retorna a base inteira de herois',
+                validate:{
+                    headers,
+                }
             },
             handler: (request, headers) => {
                 return this.db.read()
@@ -32,6 +39,7 @@ class HeroRoutes extends BaseRoute {
                     failAction: (request, h, err) => {
                         throw err;
                       },
+                      headers,
                     payload: {
                         nome: Joi.string().max(100).required(),
                         poder: Joi.string().max(30).required()
@@ -57,6 +65,7 @@ class HeroRoutes extends BaseRoute {
                     failAction: (request, h, err) => {
                         throw err;
                       },
+                      headers,
                     payload: {
                         nome: Joi.string().max(100),
                         poder: Joi.string().max(30)
@@ -86,6 +95,7 @@ class HeroRoutes extends BaseRoute {
                     failAction: (request, h, err) => {
                         throw err;
                     },
+                    headers,
                     params: {
                         id: Joi.string().required()
                     }
