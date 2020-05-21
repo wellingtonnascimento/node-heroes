@@ -48,12 +48,12 @@ sleep 5;
     //listar containers ativos 
     docker ps 
 
-    //listar todos cantainer
+    //listar todos cantainer 
     docker ps -a
 
-    //entra no container
+    //entrar no container
     docker exec -it postgres /bin/bash
 
-    // Iniciao Imagem
+    // Iniciar Imagem
     docker start id_ou_nome_da_imagem
 
