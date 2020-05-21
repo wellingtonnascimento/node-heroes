@@ -1,5 +1,9 @@
-//instal imagem postgres
-    sudo docker run \
+- Trabalhando com o padrão Strategy para Multi DataSources
+
+## Instalando docker para usar o MongoDB e Postgres
+```shell
+//install imagem postgres
+    docker run \
      --name postgres \
      -e POSTGRES_USER=wellington \
      -e POSTGRES_PASSWORD=123456 \
@@ -8,7 +12,7 @@
      -d \
      postgres
 
-//cliente postgress
+//Client postgress
     sudo docker run \
         --name adminer \
         -p 8080:8080 \
@@ -16,26 +20,30 @@
         -d \
         adminer
 
-//instal imagem mongodb
-     docker run \
+## ---- MONGODB
+//install imagem mongodb
+    docker run \
      --name mongodb \
      -p 27017:27017 \
      -e MONGO_INITDB_ROOT_USERNAME=admin \
      -e MONGO_INITDB_ROOT_PASSWORD=123456 \
      -d \
-     mongo:4 
-//CLiente MOngo
+     mongo 
+
+//Client mongodb
       docker run \
       --name mongoclient \
       -p 3000:3000 \
       --link mongodb:mongodb \
       -d \
-      mongoclient/mongoclient:4.0.0
+      mongoclient/mongoclient
 
-docker exec -it mongodb \
+sleep 5;
+
+    docker exec -it mongodb \
       mongo --host localhost -u admin -p 123456 --authenticationDatabase admin \
       --eval "db.getSiblingDB('herois').createUser({user: 'wellington', pwd: '123456', roles: [{role: 'readWrite', db: 'herois'}]})"
-
+```
 
     //listar containers ativos 
     docker ps 
