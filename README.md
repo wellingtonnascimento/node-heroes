@@ -5,7 +5,7 @@
 //install imagem postgres
     docker run \
      --name postgres \
-     -e POSTGRES_USER=wellington \
+     -e POSTGRES_USER=admin \
      -e POSTGRES_PASSWORD=123456 \
      -e POSTGRES_DB=heroes \
      -p 5432:5432 \
