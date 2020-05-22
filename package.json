@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --timeout 5000 src/tests/*.js",
     "test:prod": "cross-env NODE_ENV=prod npm t",
-    "prod": "cross-env NODE_ENV=prod node src/api.js"
+    "prod": "cross-env NODE_ENV=prod pm2-runtime src/api.js"
   },
   "keywords": [],
   "author": "Wellington N.",
@@ -28,6 +28,7 @@
     "mongoose": "^5.3.11",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
+    "pm2": "^4.4.0",
     "sequelize": "^4.38.0",
     "vision": "^5.4.3"
   }
