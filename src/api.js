@@ -15,19 +15,20 @@ config({
 const Hapi = require('hapi');
 const Context = require('./db/strategies/base/contextStrategy');
 const MongoDb = require('./db/strategies/mongodb/mongoDbStrategy');
+
 const HeroiSchema = require('./db/strategies/mongodb/schemas/heroisSchema');
 const HeroRoute = require('./routes/heroesRoute');
-const AuthRoute = require('./routes/authRoutes');
 
+const AuthRoute = require('./routes/authRoutes');
 const Postgres = require('./db/strategies/postgres/postgresSQLStrategy')
 const UserSchame = require('./db/strategies/postgres/schemas/userSchame')
+
+const UtilRoutes = require('./routes/utilRoutes');
 
 const HapiSwagger = require('hapi-swagger');
 const Vision = require('vision');
 const Inert = require('inert');
-
 const HapiJwt = require('hapi-auth-jwt2');
-
 const JWT_SECRET = process.env.JWT_KEY;
 
 const swaggerConfig = {
@@ -90,12 +91,14 @@ async function main() {
     });
     app.auth.default('jwt')
     app.route([
+        ...mapRoutes(new UtilRoutes(), UtilRoutes.methods()),
         ...mapRoutes(new HeroRoute(context), HeroRoute.methods()),
-        ...mapRoutes(new AuthRoute(JWT_SECRET, contextPostgres), AuthRoute.methods())
+        ...mapRoutes(new AuthRoute(JWT_SECRET, contextPostgres), AuthRoute.methods()),
+ 
     ])
 
     await app.start();
-    console.log('Servidor rodando na porta', app.info.port);
+    console.log('server running at', app.info.port);
 
     return app;
 }

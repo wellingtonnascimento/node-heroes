@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 5000 src/tests/*.js",
+    "test": "nyc --reporter=html mocha --timeout  5000 --exit src/tests/*.js",
     "test:prod": "cross-env NODE_ENV=prod npm t",
     "prod": "cross-env NODE_ENV=prod pm2-runtime src/api.js"
   },
@@ -12,7 +12,8 @@
   "author": "Wellington N.",
   "license": "ISC",
   "devDependencies": {
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nyc": "^15.0.1"
   },
   "dependencies": {
     "bcrypt": "^4.0.1",
